@@ -2,7 +2,7 @@ import streamlit as st
 import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
-from analysis import run_clustering  
+from analysis import run_analysis
 import os
 from pathlib import Path
 
@@ -28,7 +28,7 @@ st.dataframe(df.head())
 
 # Pilihan Analisis
 st.sidebar.header("Pilih Analisis")
-analysis_option = st.sidebar.selectbox("Analisis", ["Visualisasi Data", "Clustering"])
+analysis_option = st.sidebar.selectbox("Analisis", ["Visualisasi Data", "Grouping Analysis"])
 
 if analysis_option == "Visualisasi Data":
     st.write("## Tren Penyewaan Sepeda")
@@ -59,9 +59,9 @@ if analysis_option == "Visualisasi Data":
         ax2.set_title("Jumlah Peminjaman Sepanjang Hari")
         st.pyplot(fig2)
 
-elif analysis_option == "Clustering":
-    st.write("## Hasil Clustering")
-    cluster_fig = run_clustering()
-    st.pyplot(cluster_fig)
+elif analysis_option == "Grouping Analysis":
+    st.write("## Hasil Grouping Analysis")
+    grouping_fig = run_analysis()
+    st.pyplot(grouping_fig)
 
 st.write("🚀 Dibuat dengan Streamlit oleh Dila Nurlaila")

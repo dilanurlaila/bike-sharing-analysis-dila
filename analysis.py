@@ -1,30 +1,24 @@
 import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
-from sklearn.cluster import KMeans
-from sklearn.preprocessing import StandardScaler
 
-def run_clustering():
+def run_analysis():
     # Load Data
     hour_df = pd.read_csv("data/hourly_rentals.csv")
 
-    # Pilih fitur untuk clustering
-    features = ['hr', 'cnt', 'temp', 'weekday']
-    data = hour_df[features].copy()
-
-    # Normalisasi data
-    scaler = StandardScaler()
-    data_scaled = scaler.fit_transform(data)
-
-    # Jalankan K-Means dengan 3 cluster
-    kmeans = KMeans(n_clusters=3, random_state=42, n_init=10)
-    hour_df['Cluster'] = kmeans.fit_predict(data_scaled)
-
-    # Visualisasi hasil clustering
-    fig, ax = plt.subplots(figsize=(10, 6))
-    sns.scatterplot(x=hour_df['hr'], y=hour_df['cnt'], hue=hour_df['Cluster'], palette='viridis', ax=ax)
-    ax.set_title("Clustering Penyewaan Sepeda Berdasarkan Jam")
-    ax.set_xlabel("Jam dalam Sehari")
+    # Grouping berdasarkan jam ke dalam kategori waktu
+    bins = [0, 6, 12, 18, 24]  # Rentang waktu
+    labels = ['Malam', 'Pagi', 'Siang', 'Sore']  # Label kategori
+    hour_df['time_category'] = pd.cut(hour_df['hr'], bins=bins, labels=labels, right=False)
+    
+    # Agregasi jumlah peminjaman berdasarkan kategori waktu
+    time_grouped = hour_df.groupby('time_category')['cnt'].sum().reset_index()
+    
+    # Visualisasi hasil grouping
+    fig, ax = plt.subplots(figsize=(8, 5))
+    sns.barplot(x='time_category', y='cnt', data=time_grouped, palette='coolwarm', ax=ax)
+    ax.set_title("Jumlah Peminjaman Sepeda Berdasarkan Kategori Waktu")
+    ax.set_xlabel("Kategori Waktu")
     ax.set_ylabel("Jumlah Peminjaman Sepeda")
 
     return fig
