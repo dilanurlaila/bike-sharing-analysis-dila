@@ -23,7 +23,7 @@ st.title("📊 Dashboard Analisis Bike Sharing")
 analysis_option = st.sidebar.selectbox("Analisis", ["Distribusi Musim", "Pengaruh Cuaca", "Grouping Jam"])
 
 #Filtering
-if analysis_option != "Pengaruh Cuaca":
+if analysis_option == "Distribusi Musim":
     st.sidebar.header("Filter Data")
     start_date = st.sidebar.date_input("Mulai Tanggal", daily_df["dteday"].min())
     end_date = st.sidebar.date_input("Akhir Tanggal", daily_df["dteday"].max())
