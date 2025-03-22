@@ -72,7 +72,7 @@ elif analysis_option == "Pengaruh Cuaca":
     st.write("### Rata-rata Jumlah Peminjaman Berdasarkan Kondisi Cuaca")
     st.image("data/boxplot1.png")
 
-elif analysis_option == "Grouping Jam":
+elif analysis_option == "Grouping Time Category":
     st.write("### Penyewaan Sepeda Berdasarkan Waktu")
     bins = [0, 6, 12, 18, 24]
     labels = ["Malam", "Pagi", "Siang", "Sore"]
