@@ -54,7 +54,7 @@ if analysis_option == "Distribusi Musim":
     st.write("### Total Penyewaan Sepeda Berdasarkan Musim")
 
     season_rentals = daily_df_filtered.groupby("season", as_index=False)["cnt"].sum()
-    #season_rentals = season_rentals.sort_values(by="cnt", ascending=True)
+    season_rentals = season_rentals.sort_values(by="cnt", ascending=True)
     colors = [season_colors[season] for season in season_rentals["season"]]
 
     fig, ax = plt.subplots(figsize=(8, 5))
