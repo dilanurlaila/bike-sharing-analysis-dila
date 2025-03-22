@@ -59,7 +59,8 @@ if analysis_option == "Distribusi Musim":
 
     fig, ax = plt.subplots(figsize=(8, 5))
     sns.barplot(x="season", y="cnt", data=season_rentals, palette=colors, ax=ax)
-    
+    for index, row in enumerate(season_rentals.itertuples()):
+        ax.text(index, row.cnt + 1000, f"{row.cnt:,}", ha='center', fontsize=12)
     ax.set_xlabel("Musim")
     ax.set_ylabel("Total Penyewaan Sepeda")
     ax.set_title("Total Penyewaan Sepeda Berdasarkan Musim")
