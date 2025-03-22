@@ -23,7 +23,7 @@ daily_df['dteday'] = pd.to_datetime(daily_df['dteday'])
 st.title("📊 Dashboard Analisis Bike Sharing")
 
 # Pilihan Analisis
-analysis_option = st.sidebar.selectbox("Analisis", ["Distribusi Musim", "Pengaruh Cuaca", "Grouping Jam"])
+analysis_option = st.sidebar.selectbox("Analisis", ["Distribusi Musim", "Pengaruh Cuaca", "Grouping Time Category"])
 
 #Filtering
 if analysis_option == "Distribusi Musim":
