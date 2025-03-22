@@ -11,6 +11,9 @@ hourly_df = pd.read_csv("data/hourly_rentals.csv")
 season_mapping = {1: "Musim Semi", 2: "Musim Panas", 3: "Musim Gugur", 4: "Musim Dingin"}
 weather_mapping = {1: "Cerah / Cerah Sebagian", 2: "Mendung / Mendung Sebagian", 3: "Hujan / Salju Ringan / Mendung Tebal"}
 
+#Membuat warna tetap konsisten berdasarkan musim
+season_colors = {"Musim Semi" : "#89a5e9" , "Musim Panas" : "#ebcebe" ,"Musim Dingin" : "#c8d4ed" , "Musim Gugur" : "#dc8e78"}
+
 daily_df["season"] = daily_df["season"].map(season_mapping)
 daily_df["weathersit"] = daily_df["weathersit"].map(weather_mapping)
 
@@ -39,6 +42,7 @@ if analysis_option == "Distribusi Musim":
    
     daily_df_filtered = daily_df_filtered[daily_df_filtered["season"].isin(selected_season)]
     daily_df_filtered = daily_df_filtered[daily_df_filtered["weathersit"].isin(selected_weather)]
+   
 else:
     daily_df_filtered = daily_df  # Jika "Pengaruh Cuaca" dipilih, gunakan seluruh data tanpa filter
 
@@ -48,8 +52,14 @@ st.write(f"**Total rent: {total_rentals:,}**")
 
 if analysis_option == "Distribusi Musim":
     st.write("### Total Penyewaan Sepeda Berdasarkan Musim")
+
+    season_rentals = daily_df_filtered.groupby("season", as_index=False)["cnt"].sum()
+    #season_rentals = season_rentals.sort_values(by="cnt", ascending=True)
+    colors = [season_colors[season] for season in season_rentals["season"]]
+
     fig, ax = plt.subplots(figsize=(8, 5))
-    sns.barplot(x="season", y="cnt", data=daily_df_filtered, palette="coolwarm", ax=ax)
+    sns.barplot(x="season", y="cnt", data=season_rentals, palette=colors, ax=ax)
+    
     ax.set_xlabel("Musim")
     ax.set_ylabel("Total Penyewaan Sepeda")
     ax.set_title("Total Penyewaan Sepeda Berdasarkan Musim")
