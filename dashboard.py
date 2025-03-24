@@ -63,14 +63,16 @@ if analysis_option == "Distribusi Musim":
         max_index = season_rentals["sum"].idxmax()
         colors[list(season_rentals.index).index(max_index)] = highlight_palette
 
-    fig, ax = plt.subplots(figsize=(8, 5))
-    sns.barplot(x="season", y="cnt", data=season_rentals, palette=colors, ax=ax)
-    for index, row in enumerate(season_rentals.itertuples()):
-        ax.text(index, row.cnt + 1000, f"{row.cnt:,}", ha='center', fontsize=12)
-    ax.set_xlabel("Musim")
-    ax.set_ylabel("Total Penyewaan Sepeda")
-    ax.set_title("Total Penyewaan Sepeda Berdasarkan Musim")
-    st.pyplot(fig)
+        fig, ax = plt.subplots(figsize=(8, 5))
+        sns.barplot(x="season", y="sum", data=season_rentals, palette=colors, ax=ax)
+
+        for index, row in enumerate(season_rentals.itertuples()):
+            ax.text(index, row.sum + 1000, f"{row.sum:,}", ha='center', fontsize=12)
+
+        ax.set_xlabel("Musim")
+        ax.set_ylabel("Total Penyewaan Sepeda")
+        ax.set_title("Total Penyewaan Sepeda Berdasarkan Musim")
+        st.pyplot(fig)
 
 elif analysis_option == "Pengaruh Cuaca":
     st.write("### Distribusi Jumlah Peminjaman Berdasarkan Kondisi Cuaca")
