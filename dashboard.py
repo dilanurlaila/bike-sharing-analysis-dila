@@ -11,9 +11,6 @@ hourly_df = pd.read_csv("data/hourly_rentals.csv")
 season_mapping = {1: "Musim Semi", 2: "Musim Panas", 3: "Musim Gugur", 4: "Musim Dingin"}
 weather_mapping = {1: "Cerah / Cerah Sebagian", 2: "Mendung / Mendung Sebagian", 3: "Hujan / Salju Ringan / Mendung Tebal"}
 
-#Membuat warna tetap konsisten berdasarkan musim
-season_colors = {"Musim Semi" : "#89a5e9" , "Musim Panas" : "#ebcebe" ,"Musim Dingin" : "#c8d4ed" , "Musim Gugur" : "#dc8e78"}
-
 daily_df["season"] = daily_df["season"].map(season_mapping)
 daily_df["weathersit"] = daily_df["weathersit"].map(weather_mapping)
 
@@ -52,10 +49,19 @@ st.write(f"**Total rent: {total_rentals:,}**")
 
 if analysis_option == "Distribusi Musim":
     st.write("### Total Penyewaan Sepeda Berdasarkan Musim")
+    season_rentals = daily_df_filtered.groupby("season", as_index=False)["cnt"].agg(["mean", "sum", "count"]).reset_index()
+    season_rentals = season_rentals.sort_values(by="sum", ascending=True)
 
-    season_rentals = daily_df_filtered.groupby("season", as_index=False)["cnt"].sum()
-    season_rentals = season_rentals.sort_values(by="cnt", ascending=True)
-    colors = [season_colors[season] for season in season_rentals["season"]]
+    if season_rentals.empty:
+        st.warning("Tidak ada data yang tersedia untuk ditampilkan.")
+    else:
+        base_palette = "lightblue"
+        highlight_palette = sns.color_palette("Blues", 5)[-1]
+
+        # Mengatur warna, sorotan pada nilai penyewaan tertinggi
+        colors = [base_palette] * len(season_rentals)
+        max_index = season_rentals["sum"].idxmax()
+        colors[list(season_rentals.index).index(max_index)] = highlight_palette
 
     fig, ax = plt.subplots(figsize=(8, 5))
     sns.barplot(x="season", y="cnt", data=season_rentals, palette=colors, ax=ax)
@@ -81,8 +87,16 @@ elif analysis_option == "Grouping Time Category":
     
     # Mengelompokkan data berdasarkan kategori waktu
     rentals_by_time = hourly_df.groupby("time_category")["cnt"].sum().reset_index()
+
+    base_palette = sns.color_palette("Blues", len(rentals_by_time))  # Warna seragam biru
+    highlight_palette = sns.color_palette("Blues", 5)[-1]
+
+    colors = [base_palette[1]] * len(rentals_by_time)
+    max_index = rentals_by_time['cnt'].idxmax()  
+    colors[max_index] = highlight_palette 
+
     fig, ax = plt.subplots(figsize=(8, 5))
-    sns.barplot(x="time_category", y="cnt", data=rentals_by_time, palette=["blue", "orange", "red", "green"], ax=ax)
+    sns.barplot(x="time_category", y="cnt", data=rentals_by_time, palette=colors, ax=ax)
     
     for i, v in enumerate(rentals_by_time["cnt"]):
         ax.text(i, v + 500, f"{v:,}", ha='center', fontsize=10)
